@@ -348,7 +348,7 @@ export default function Menu() {
         sensors={sensors}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <SortableContext
             items={filteredItems.map(item => item.id)}
             strategy={verticalListSortingStrategy}
