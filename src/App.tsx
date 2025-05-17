@@ -16,6 +16,7 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import Catering from './pages/Catering';
 import Locate from './pages/Locate';
 import Gallery from './pages/Gallery';
+import BlogDetails from './pages/BlogDetails';
 import Contact from './pages/Contact';
 import Blog from './pages/Blog';
 import AdminLayout from './pages/admin/AdminLayout';
@@ -58,6 +59,7 @@ function App() {
           <Route path="/locate" element={<Locate />} />
           <Route path="/order/confirmation" element={<OrderConfirmation />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/blog/:id" element={<BlogDetails />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/admin/login" element={<AdminLogin />} />
