@@ -5,9 +5,9 @@ const CONTACT_INFO = {
   phone: '+1 (803) 999-7978',
   email: 'afrojerkfood@gmail.com',
   social: {
-    instagram: 'https://instagram.com/afrojerk',
-    facebook: 'https://facebook.com/afrojerk',
-    twitter: 'https://twitter.com/afrojerk'
+    instagram: 'https://www.instagram.com/afrojerkfood/',
+    // facebook: 'https://facebook.com/afrojerk',
+    // twitter: 'https://twitter.com/afrojerk'
   },
   locations: [
     {
@@ -118,7 +118,7 @@ export default function Contact() {
                   >
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a 
+                  {/* <a 
                     href={CONTACT_INFO.social.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -133,7 +133,7 @@ export default function Contact() {
                     className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#edba3a] hover:text-white transition-colors"
                   >
                     <Twitter className="w-5 h-5" />
-                  </a>
+                  </a> */}
                 </div>
               </div>
             </div>
