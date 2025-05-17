@@ -236,17 +236,36 @@ export default function Menu() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this item?')) {
       try {
-        const { error } = await supabase
+        const { data: orderItems, error: checkError } = await supabase
+          .from('order_items')
+          .select('id')
+          .eq('menu_item_id', id)
+          .limit(1);
+
+        if (checkError) throw checkError;
+
+        if (orderItems && orderItems.length > 0) {
+          toast.error('This item cannot be deleted because it has been ordered before. Consider updating it instead.');
+          return;
+        }
+
+        const { error: deleteError } = await supabase
           .from('menu_items')
           .delete()
           .eq('id', id);
 
-        if (error) throw error;
+        if (deleteError) throw deleteError;
+
+        // Refresh the menu items to ensure we have the latest data
+        await fetchMenuItems();
         toast.success('Menu item deleted successfully');
-        fetchMenuItems();
       } catch (error) {
         console.error('Error deleting menu item:', error);
-        toast.error('Failed to delete menu item');
+        if (error instanceof Error && error.message.includes('foreign key constraint')) {
+          toast.error('This item cannot be deleted because it has been ordered before');
+        } else {
+          toast.error('Failed to delete menu item');
+        }
       }
     }
   };
