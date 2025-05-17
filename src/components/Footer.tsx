@@ -34,7 +34,7 @@ export default function Footer() {
               alt="Afro Jerk Logo"
               className="h-36 w-auto"
             />
-            <p className="text-sm">
+            <p className="text-sm mt-4">
               Bringing the vibrant flavors of Africa and the Caribbean to the streets of Charlotte.
             </p>
           </div>
