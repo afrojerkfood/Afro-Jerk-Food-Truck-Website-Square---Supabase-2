@@ -45,50 +45,61 @@ export default function GalleryAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.title || !formData.image_url || !formData.location || !formData.type) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
+    setSubmitting(true);
+    console.log('Starting gallery submission:', formData);
 
-    if (editingItem) {
-      try {
+    try {
+      let imageUrl = null;
+      if (reviewForm.image) {
+        console.log('Uploading review image...');
+        imageUrl = await handleImageUpload(reviewForm.image);
+      }
+
+      if (editingItem) {
         const { error } = await supabase
           .from('gallery_items')
           .update({
-            ...formData,
+            title: formData.title,
+            image_url: formData.image_url,
+            type: formData.type,
+            location: formData.location,
+            date: formData.date,
             updated_at: new Date().toISOString()
           })
           .eq('id', editingItem.id);
 
         if (error) throw error;
         toast.success('Gallery item updated successfully');
-        fetchGalleryItems();
-        setIsModalOpen(false);
-        setEditingItem(null);
-        setFormData({});
-      } catch (error) {
-        console.error('Error updating gallery item:', error);
-        toast.error('Failed to update gallery item');
-      }
-    } else {
-      try {
+      } else {
         const { error } = await supabase
           .from('gallery_items')
           .insert([{
-            ...formData,
-            created_at: new Date().toISOString()
+            title: formData.title,
+            image_url: formData.image_url,
+            type: formData.type,
+            location: formData.location,
+            date: formData.date
           }]);
 
         if (error) throw error;
         toast.success('Gallery item added successfully');
-        fetchGalleryItems();
-        setIsModalOpen(false);
-        setFormData({});
-      } catch (error) {
-        console.error('Error adding gallery item:', error);
-        toast.error('Failed to add gallery item');
       }
+
+      setIsModalOpen(false);
+      setFormData({
+        title: '',
+        image_url: '',
+        type: 'food',
+        location: '',
+        date: ''
+      });
+      setEditingItem(null);
+      fetchGalleryItems();
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast.error('Failed to save gallery item');
+    } finally {
+      setSubmitting(false);
     }
   };
 
