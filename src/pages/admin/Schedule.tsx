@@ -169,13 +169,11 @@ export default function Schedule() {
   return (
     <div>
       <Toaster position="top-right" />
-      
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 mt-12 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 mt-8 sm:mt-12 gap-3">
         <div>
           <h1 className="text-2xl font-bold">Schedule</h1>
-          <p className="text-gray-600">Manage your food truck locations and times</p>
+          <p className="text-xs sm:text-sm text-gray-600 mt-1">Manage your food truck locations and times</p>
         </div>
-        
         
         <button
           onClick={() => {
@@ -183,7 +181,7 @@ export default function Schedule() {
             setFormData({});
             setIsModalOpen(true);
           }}
-          className="flex items-center gap-2 bg-[#01a952] text-white px-4 py-2 rounded-lg hover:bg-[#01a952]/90 transition-colors"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#01a952] text-white px-4 py-2 rounded-lg hover:bg-[#01a952]/90 transition-colors"
         >
           <Plus className="w-5 h-5" />
           Add Schedule
@@ -192,7 +190,7 @@ export default function Schedule() {
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="space-y-3 md:space-y-0 md:flex md:gap-4">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -206,18 +204,20 @@ export default function Schedule() {
             </div>
           </div>
 
-          <div className="flex overflow-x-auto gap-2 no-scrollbar">
+          <div className="flex flex-wrap gap-2">
             {dates.map((date) => (
               <button
                 key={date.toString()}
                 onClick={() => setSelectedDate(date)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
-                  isSameDay(date, selectedDate)
+                className={`
+                  px-4 py-2 rounded-lg text-sm font-medium capitalize
+                  ${isSameDay(date, selectedDate)
                     ? 'bg-[#eb1924] text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+                  }
+                `}
               >
-                {format(date, 'MMM d')}
+                {format(date, isSameDay(date, startOfToday()) ? "'Today'" : 'MMM d')}
               </button>
             ))}
           </div>
@@ -225,86 +225,87 @@ export default function Schedule() {
       </div>
 
       {/* Schedule List */}
-      {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-6 shadow-sm animate-pulse">
-              <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-4">
-        {filteredSchedule.map((event) => {
-          const location = event.location;
-          
-          return (
-            <div
-              key={event.id}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-medium">{location?.name}</h3>
-                    <span className="text-sm text-gray-500">{location?.address}</span>
-                  </div>
-
-                  <div className="flex items-center gap-6 text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      <span>{format(parse(event.date, 'yyyy-MM-dd', new Date()), 'MMMM d, yyyy')}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>
-                        {format(parse(event.start_time.slice(0, 5), 'HH:mm', new Date()), 'h:mm aa')} - {' '}
-                        {format(parse(event.end_time.slice(0, 5), 'HH:mm', new Date()), 'h:mm aa')}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>
-                        {location?.lat}, {location?.lng}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(event)}
-                    className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-                  >
-                    <Pencil className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(event.id)}
-                    className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
+      <div className="mt-4 space-y-3">
+        {loading ? (
+          <>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-lg p-4 shadow-sm animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </>
+        ) : (
+          <>
+            {filteredSchedule.map((event) => {
+              const location = event.location;
+              
+              return (
+                <div
+                  key={event.id}
+                  className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow w-full"
+                >
+                  <div className="flex flex-col items-start gap-3">
+                    <div className="flex-1">
+                      <div className="space-y-1 mb-2">
+                        <h3 className="text-base font-medium">{location?.name}</h3>
+                        <span className="text-xs text-gray-500">{location?.address}</span>
+                      </div>
 
-        {filteredSchedule.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            No schedules found for this date
-          </div>
+                      <div className="grid grid-cols-1 gap-2 text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4" />
+                          <span className="text-sm">{format(parse(event.date, 'yyyy-MM-dd', new Date()), 'MMMM d, yyyy')}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4" />
+                          <span className="text-sm">
+                            {format(parse(event.start_time.slice(0, 5), 'HH:mm', new Date()), 'h:mm aa')} - {' '}
+                            {format(parse(event.end_time.slice(0, 5), 'HH:mm', new Date()), 'h:mm aa')}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4" />
+                          <span className="text-sm">
+                            {location?.lat}, {location?.lng}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 self-end mt-2">
+                      <button
+                        onClick={() => handleEdit(event)}
+                        className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(event.id)}
+                        className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {!loading && filteredSchedule.length === 0 && (
+              <div className="text-center py-12 text-gray-500">
+                No schedules found for this date
+              </div>
+            )}
+          </>
         )}
       </div>
-      )}
 
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-md w-full">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-xl font-bold">
+              <h2 className="text-lg font-bold">
                 {editingEvent ? 'Edit Schedule' : 'Add Schedule'}
               </h2>
               <button
@@ -323,7 +324,7 @@ export default function Schedule() {
                 <select
                   value={formData.location_id || ''}
                   onChange={(e) => setFormData({ ...formData, location_id: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
                   required
                 >
                   <option value="">Select a location</option>
@@ -343,7 +344,7 @@ export default function Schedule() {
                   type="date"
                   value={formData.date || ''}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
                   required
                 />
               </div>
@@ -357,7 +358,7 @@ export default function Schedule() {
                     type="time"
                     value={formData.start_time || ''}
                     onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
                     required
                   />
                 </div>
@@ -370,7 +371,7 @@ export default function Schedule() {
                     type="time"
                     value={formData.end_time || ''}
                     onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
                     required
                   />
                 </div>
@@ -380,13 +381,13 @@ export default function Schedule() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="px-3 py-2 text-sm rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
+                  className="px-3 py-2 text-sm rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
                 >
                   {editingEvent ? 'Update Schedule' : 'Add Schedule'}
                 </button>
