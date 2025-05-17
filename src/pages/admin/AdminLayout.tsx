@@ -17,7 +17,7 @@ export default function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    // Handle logout logic here
+    sessionStorage.removeItem('isAdminAuthenticated');
     navigate('/');
   };
 
