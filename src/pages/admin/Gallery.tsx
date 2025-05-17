@@ -16,6 +16,7 @@ export default function GalleryAdmin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
   const [formData, setFormData] = useState<Partial<GalleryItem>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchGalleryItems();
@@ -49,12 +50,6 @@ export default function GalleryAdmin() {
     console.log('Starting gallery submission:', formData);
 
     try {
-      let imageUrl = null;
-      if (reviewForm.image) {
-        console.log('Uploading review image...');
-        imageUrl = await handleImageUpload(reviewForm.image);
-      }
-
       if (editingItem) {
         const { error } = await supabase
           .from('gallery_items')
@@ -300,7 +295,8 @@ export default function GalleryAdmin() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
+                  disabled={submitting}
+                  className="px-4 py-2 rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {editingItem ? 'Update Item' : 'Add Item'}
                 </button>
