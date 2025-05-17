@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, Users, Phone, Mail, MapPin, ChevronRight, Utensils } from 'lucide-react';
 import { format, addDays, isBefore, startOfToday } from 'date-fns';
+import { toast } from 'sonner';
 
 interface MenuItem {
   id: string;
@@ -19,6 +20,7 @@ const MENU_ITEMS: MenuItem[] = [
 ];
 
 export default function Catering() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -43,49 +45,52 @@ export default function Catering() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Format the order details for better readability
-    const orderDetails = Object.entries(formData.items)
-      .map(([itemId, quantity]) => {
-        const item = MENU_ITEMS.find(i => i.id === itemId);
-        return `${item?.name}: ${quantity}`;
-      })
-      .join('\n');
-
-    const formattedData = {
-      ...formData,
-      orderDetails,
-      total: calculateTotal(),
-      'form-name': 'catering'
-    };
-
     try {
+      setIsSubmitting(true);
+      
+      // Format the order details for better readability
+      const orderDetails = Object.entries(formData.items)
+        .map(([itemId, quantity]) => {
+          const item = MENU_ITEMS.find(i => i.id === itemId);
+          return `${item?.name}: ${quantity}`;
+        })
+        .join('\n');
+
+      const formattedData = {
+        ...formData,
+        orderDetails,
+        total: calculateTotal(),
+        'form-name': 'catering'
+      };
+
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(formattedData as any).toString()
       });
 
-      if (response.ok) {
-        alert('Thank you for your catering request! We will contact you shortly.');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          company: '',
-          date: '',
-          time: '',
-          guests: '25',
-          location: '',
-          items: {},
-          notes: ''
-        });
-      } else {
+      if (!response.ok) {
         throw new Error('Form submission failed');
       }
+
+      toast.success('Thank you for your catering request! We will contact you shortly.');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        date: '',
+        time: '',
+        guests: '25',
+        location: '',
+        items: {},
+        notes: ''
+      });
     } catch (error) {
-      alert('There was an error submitting your request. Please try again.');
+      console.error('Form submission error:', error);
+      toast.error('There was an error submitting your request. Please try again.');
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -119,6 +124,8 @@ export default function Catering() {
           </form>
 
           <form onSubmit={handleSubmit} className="space-y-8">
+            <input type="hidden" name="form-name" value="catering" />
+            
             {/* Contact Information */}
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <h2 className="text-xl font-bold mb-4">Contact Information</h2>
@@ -304,9 +311,10 @@ export default function Catering() {
             <button
               type="submit"
               className="w-full bg-[#01a952] text-white py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#01a952]/90 transition-colors"
+              disabled={isSubmitting}
             >
               <Utensils className="w-5 h-5" />
-              Submit Catering Request
+              {isSubmitting ? 'Submitting...' : 'Submit Catering Request'}
             </button>
           </form>
         </div>
