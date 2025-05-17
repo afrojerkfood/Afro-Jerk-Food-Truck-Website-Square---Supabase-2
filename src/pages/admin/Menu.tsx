@@ -48,7 +48,7 @@ function SortableItem({ id, item, onEdit, onDelete }: SortableItemProps) {
         <div {...attributes} {...listeners} className="cursor-grab hover:text-gray-700">
           <GripVertical className="w-5 h-5" />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1 md:gap-2">
           <button
             onClick={() => onEdit(item)}
             className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
@@ -74,18 +74,18 @@ function SortableItem({ id, item, onEdit, onDelete }: SortableItemProps) {
 
       <div className="p-4">
         <div className="flex justify-between items-start gap-4">
-          <h3 className="text-xl font-bold">{item.name}</h3>
-          <span className="text-lg font-bold text-[#eb1924]">
+          <h3 className="text-base md:text-xl font-bold">{item.name}</h3>
+          <span className="text-base md:text-lg font-bold text-[#eb1924]">
             ${item.price.toFixed(2)}
           </span>
         </div>
 
-        <p className="text-sm text-gray-600 mb-3">
+        <p className="text-xs md:text-sm text-gray-600 mb-3">
           {item.description}
         </p>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs font-medium bg-gray-100 text-gray-600 px-2 py-1 rounded-full capitalize">
+          <span className="text-[10px] md:text-xs font-medium bg-gray-100 text-gray-600 px-2 py-1 rounded-full capitalize">
             {item.category}
           </span>
           
@@ -290,8 +290,8 @@ export default function Menu() {
       
       <div className="flex justify-between items-center mb-8 mt-12">
         <div>
-          <h1 className="text-2xl font-bold">Menu</h1>
-          <p className="text-gray-600">Manage your menu items</p>
+          <h1 className="text-xl md:text-2xl font-bold">Menu</h1>
+          <p className="text-sm md:text-base text-gray-600">Manage your menu items</p>
         </div>
         
         <button
@@ -309,7 +309,7 @@ export default function Menu() {
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="space-y-3 md:space-y-0 md:flex md:gap-4">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -323,7 +323,7 @@ export default function Menu() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((category) => (
               <button
                 key={category}
@@ -348,7 +348,7 @@ export default function Menu() {
         sensors={sensors}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           <SortableContext
             items={filteredItems.map(item => item.id)}
             strategy={verticalListSortingStrategy}
@@ -369,9 +369,9 @@ export default function Menu() {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-xl font-bold">
+              <h2 className="text-lg md:text-xl font-bold">
                 {editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
               </h2>
               <button
@@ -391,7 +391,7 @@ export default function Menu() {
                   type="text"
                   value={formData.name || ''}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm md:text-base rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
                   required
                 />
               </div>
@@ -509,13 +509,13 @@ export default function Menu() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="px-3 md:px-4 py-2 text-sm md:text-base rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
+                  className="px-3 md:px-4 py-2 text-sm md:text-base rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
                 >
                   {editingItem ? 'Update Item' : 'Add Item'}
                 </button>
