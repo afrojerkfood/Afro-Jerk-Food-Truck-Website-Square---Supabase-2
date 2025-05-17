@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Search, Pencil, Trash2, X, MapPin } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
+import MediaUpload from '../MediaUpload';
 import type { Database } from '../../lib/database.types';
 
 type Location = Database['public']['Tables']['locations']['Row'];
@@ -164,14 +165,17 @@ export default function LocationsManager() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">Locations</h2>
+        <div>
+          <h2 className="text-xl font-bold">Locations</h2>
+          <p className="text-xs sm:text-sm text-gray-600 mt-1">Manage your food truck locations</p>
+        </div>
         <button
           onClick={() => {
             setEditingLocation(null);
             setFormData({});
             setIsModalOpen(true);
           }}
-          className="flex items-center gap-2 bg-[#01a952] text-white px-4 py-2 rounded-lg hover:bg-[#01a952]/90 transition-colors"
+          className="flex-shrink-0 flex items-center gap-2 bg-[#01a952] text-white px-4 py-2 rounded-lg hover:bg-[#01a952]/90 transition-colors"
         >
           <Plus className="w-5 h-5" />
           Add Location
@@ -179,7 +183,7 @@ export default function LocationsManager() {
       </div>
 
       {/* Search */}
-      <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
+      <div className="bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-sm mb-4 sm:mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
@@ -193,7 +197,7 @@ export default function LocationsManager() {
       </div>
 
       {/* Locations Grid */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
         {loading ? (
           Array(4).fill(null).map((_, i) => (
             <div key={i} className="bg-white rounded-xl p-6 shadow-sm animate-pulse">
@@ -209,9 +213,9 @@ export default function LocationsManager() {
           filteredLocations.map((location) => (
             <div
               key={location.id}
-              className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white rounded-lg md:rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="h-48 relative overflow-hidden">
+              <div className="h-36 md:h-48 relative overflow-hidden">
                 <img
                   src={location.image_url || 'https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?auto=format&fit=crop&q=80'}
                   alt={location.name}
@@ -233,7 +237,7 @@ export default function LocationsManager() {
                 </div>
               </div>
 
-              <div className="p-4">
+              <div className="p-3 md:p-4">
                 <h3 className="font-medium mb-2">{location.name}</h3>
                 <div className="flex items-start gap-2 text-gray-600">
                   <MapPin className="w-4 h-4 mt-1" />
@@ -251,7 +255,7 @@ export default function LocationsManager() {
       {/* Add/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-md w-full">
+          <div className="bg-white rounded-lg md:rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-xl font-bold">
                 {editingLocation ? 'Edit Location' : 'Add Location'}
@@ -324,15 +328,10 @@ export default function LocationsManager() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Image URL
-                </label>
-                <input
-                  type="url"
+                <MediaUpload
                   value={formData.image_url || ''}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
-                  placeholder="https://example.com/image.jpg"
+                  onChange={(url) => setFormData({ ...formData, image_url: url })}
+                  label="Location Image"
                 />
               </div>
 
@@ -340,13 +339,13 @@ export default function LocationsManager() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="px-3 md:px-4 py-2 text-sm md:text-base rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
+                  className="px-3 md:px-4 py-2 text-sm md:text-base rounded-lg bg-[#01a952] text-white hover:bg-[#01a952]/90 transition-colors"
                 >
                   {editingLocation ? 'Update Location' : 'Add Location'}
                 </button>
