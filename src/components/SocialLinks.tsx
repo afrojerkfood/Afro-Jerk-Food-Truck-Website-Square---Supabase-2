@@ -5,21 +5,21 @@ const SOCIAL_LINKS = [
   {
     name: 'Instagram',
     icon: Instagram,
-    url: 'https://instagram.com/afrojerk',
+    url: 'https://www.instagram.com/afrojerkfood/',
     color: 'hover:bg-gradient-to-tr from-purple-600 via-pink-600 to-yellow-500'
   },
-  {
-    name: 'Facebook',
-    icon: Facebook,
-    url: 'https://facebook.com/afrojerk',
-    color: 'hover:bg-[#1877f2]'
-  },
-  {
-    name: 'Twitter',
-    icon: Twitter,
-    url: 'https://twitter.com/afrojerk',
-    color: 'hover:bg-[#1da1f2]'
-  }
+  // {
+  //   name: 'Facebook',
+  //   icon: Facebook,
+  //   url: 'https://facebook.com/afrojerk',
+  //   color: 'hover:bg-[#1877f2]'
+  // },
+  // {
+  //   name: 'Twitter',
+  //   icon: Twitter,
+  //   url: 'https://twitter.com/afrojerk',
+  //   color: 'hover:bg-[#1da1f2]'
+  // }
 ];
 
 export default function SocialLinks() {
@@ -53,7 +53,7 @@ export default function SocialLinks() {
                 ))}
               </div>
 
-              <a
+              {/* <a
                 href="https://g.page/afrojerk"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -61,7 +61,7 @@ export default function SocialLinks() {
               >
                 <MapPin className="w-5 h-5" />
                 Find us on Google Maps
-              </a>
+              </a> */}
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm">
