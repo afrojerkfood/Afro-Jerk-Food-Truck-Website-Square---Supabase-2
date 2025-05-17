@@ -25,6 +25,8 @@ import AdminMenu from './pages/admin/Menu';
 import AdminSchedule from './pages/admin/Schedule';
 import AdminBlog from './pages/admin/Blog';
 import AdminGallery from './pages/admin/Gallery';
+import AdminLogin from './pages/admin/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop'
 
 function Home() {
@@ -58,7 +60,8 @@ function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="menu" element={<AdminMenu />} />
