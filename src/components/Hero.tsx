@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import { format, isWithinInterval, parse } from 'date-fns';
 import FoodTruck from './FoodTruck';
 
 const SLIDESHOW_IMAGES = [
@@ -24,9 +26,10 @@ const SLIDESHOW_IMAGES = [
 ];
 
 export default function Hero() {
-  const isOpen = true; // This would be determined by your backend
+  const [isOpen, setIsOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -41,6 +44,44 @@ export default function Hero() {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    checkIfOpen();
+    // Check status every minute
+    const statusInterval = setInterval(checkIfOpen, 60000);
+    return () => clearInterval(statusInterval);
+  }, []);
+
+  async function checkIfOpen() {
+    try {
+      const today = new Date();
+      const currentTime = format(today, 'HH:mm:ss');
+      const currentDate = format(today, 'yyyy-MM-dd');
+
+      // Get today's schedule
+      const { data: schedules, error } = await supabase
+        .from('schedules')
+        .select(`
+          *,
+          location:locations(*)
+        `)
+        .eq('date', currentDate)
+        .order('start_time', { ascending: true });
+
+      if (error) throw error;
+
+      // Check if current time falls within any scheduled time slots
+      const isCurrentlyOpen = schedules?.some(schedule => {
+        const start = parse(schedule.start_time, 'HH:mm:ss', new Date());
+        const end = parse(schedule.end_time, 'HH:mm:ss', new Date());
+        return isWithinInterval(parse(currentTime, 'HH:mm:ss', new Date()), { start, end });
+      });
+
+      setIsOpen(!!isCurrentlyOpen);
+    } catch (error) {
+      console.error('Error checking open status:', error);
+    }
+  }
 
   return (
     <div className="relative min-h-[90vh] flex items-center pt-12">
