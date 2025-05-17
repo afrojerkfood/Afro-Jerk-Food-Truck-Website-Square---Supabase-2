@@ -11,9 +11,9 @@ const MENU_LINKS = [
 ];
 
 const SOCIAL_LINKS = [
-  { icon: Instagram, url: 'https://instagram.com/afrojerk' },
-  { icon: Facebook, url: 'https://facebook.com/afrojerk' },
-  { icon: Twitter, url: 'https://twitter.com/afrojerk' },
+  { icon: Instagram, url: 'https://www.instagram.com/afrojerkfood/' },
+  // { icon: Facebook, url: 'https://facebook.com/afrojerk' },
+  // { icon: Twitter, url: 'https://twitter.com/afrojerk' },
 ];
 
 const CONTACT_INFO = {
