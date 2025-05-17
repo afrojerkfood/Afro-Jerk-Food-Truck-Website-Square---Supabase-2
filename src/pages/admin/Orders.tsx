@@ -122,13 +122,13 @@ export default function Orders() {
   return (
     <div>
       <div className="mb-8 mt-12">
-        <h1 className="text-2xl font-bold">Orders</h1>
-        <p className="text-gray-600">Manage and track all customer orders</p>
+        <h1 className="text-xl md:text-2xl font-bold">Orders</h1>
+        <p className="text-sm md:text-base text-gray-600">Manage and track all customer orders</p>
       </div>
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="space-y-3 md:space-y-0 md:flex md:gap-4">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -143,11 +143,11 @@ export default function Orders() {
           </div>
 
           {/* Status Filter */}
-          <div className="relative">
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as Status)}
-              className="appearance-none pl-4 pr-10 py-2 rounded-lg border border-gray-700 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent capitalize"
+              className="appearance-none w-full pl-4 pr-10 py-2 rounded-lg border border-gray-700 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent capitalize"
             >
               {STATUSES.map(status => (
                 <option key={status} value={status} className="capitalize">
@@ -155,15 +155,11 @@ export default function Orders() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-          </div>
 
-          {/* Location Filter */}
-          <div className="relative">
             <select
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
+              className="appearance-none w-full pl-4 pr-10 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#eb1924] focus:border-transparent"
             >
               <option value="all">All Locations</option>
               {locations.map(location => (
@@ -172,7 +168,6 @@ export default function Orders() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
           </div>
         </div>
       </div>
@@ -202,16 +197,16 @@ export default function Orders() {
               onClick={() => setSelectedOrder(order.id === selectedOrder ? null : order.id)}
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <h3 className="font-medium">{order.id}</h3>
-                  <span className="text-sm text-gray-500">
+                <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+                  <h3 className="text-sm md:text-base font-medium">{order.id}</h3>
+                  <span className="text-xs md:text-sm text-gray-500">
                     {format(new Date(order.created_at), 'MMM d, yyyy')}
                   </span>
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value as Status)}
                     className={`
-                      px-3 py-1 rounded-full text-sm font-medium capitalize cursor-pointer
+                      w-fit px-3 py-1 rounded-full text-xs md:text-sm font-medium capitalize cursor-pointer
                       border-0 focus:ring-2 focus:ring-offset-2
                       ${getStatusColor(order.status)}
                     `}
@@ -228,27 +223,27 @@ export default function Orders() {
                     ))}
                   </select>
                 </div>
-                <span className="text-sm text-gray-500 whitespace-nowrap">
+                <span className="text-xs md:text-sm text-gray-500 whitespace-nowrap">
                   {format(new Date(order.created_at), 'h:mm aa')}
                 </span>
               </div>
 
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-4">
                 <div>
-                  <p className="font-medium">{order.customer_name}</p>
-                  <p className="text-sm text-gray-600">{order.customer_phone}</p>
+                  <p className="text-sm md:text-base font-medium">{order.customer_name}</p>
+                  <p className="text-xs md:text-sm text-gray-600">{order.customer_phone}</p>
                 </div>
 
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex flex-wrap items-center gap-3 md:gap-6">
+                  <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-gray-600">
                     <MapPin className="w-4 h-4" />
                     {order.location.name}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-gray-600">
                     <Clock className="w-4 h-4" />
                     {format(new Date(order.pickup_time), 'h:mm a')}
                   </div>
-                  <p className="font-medium">${order.total_amount.toFixed(2)}</p>
+                  <p className="text-sm md:text-base font-medium">${order.total_amount.toFixed(2)}</p>
                 </div>
               </div>
 
@@ -260,7 +255,7 @@ export default function Orders() {
                     {order.items.map((item) => (
                       <div
                         key={item.id}
-                        className="flex justify-between text-sm"
+                        className="flex justify-between text-xs md:text-sm"
                       >
                         <span>
                           {item.quantity}x {item.menu_item.name}
@@ -270,7 +265,7 @@ export default function Orders() {
                         </span>
                       </div>
                     ))}
-                    <div className="flex justify-between font-medium pt-2 border-t">
+                    <div className="flex justify-between text-sm md:text-base font-medium pt-2 border-t">
                       <span>Total</span>
                       <span>${order.total_amount.toFixed(2)}</span>
                     </div>
