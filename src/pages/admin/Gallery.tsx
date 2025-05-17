@@ -47,20 +47,23 @@ export default function GalleryAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    console.log('Starting gallery submission:', formData);
+    
+    if (!formData.title || !formData.image_url || !formData.type || !formData.location) {
+      toast.error('Please fill in all required fields');
+      setSubmitting(false);
+      return;
+    }
 
     try {
       if (editingItem) {
-        const { error } = await supabase
+        const updates = {
+          ...formData,
+          updated_at: new Date().toISOString()
+        };
+        
+        const { error } = await supabase 
           .from('gallery_items')
-          .update({
-            title: formData.title,
-            image_url: formData.image_url,
-            type: formData.type,
-            location: formData.location,
-            date: formData.date,
-            updated_at: new Date().toISOString()
-          })
+          .update(updates)
           .eq('id', editingItem.id);
 
         if (error) throw error;
@@ -81,17 +84,11 @@ export default function GalleryAdmin() {
       }
 
       setIsModalOpen(false);
-      setFormData({
-        title: '',
-        image_url: '',
-        type: 'food',
-        location: '',
-        date: ''
-      });
+      setFormData({});
       setEditingItem(null);
       fetchGalleryItems();
     } catch (error) {
-      console.error('Error submitting review:', error);
+      console.error('Error saving gallery item:', error);
       toast.error('Failed to save gallery item');
     } finally {
       setSubmitting(false);
